@@ -13,8 +13,6 @@
 #include <unistd.h>
 #endif
 
-#include <google/protobuf/io/zero_copy_stream_impl.h>
-#include <google/protobuf/text_format.h>
 #include <cmath>
 #include <stdexcept>
 

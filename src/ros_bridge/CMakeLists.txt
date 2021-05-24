@@ -27,6 +27,10 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(rosgraph_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(image_transport REQUIRED)
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -35,7 +39,7 @@ add_executable(webots_controller src/webots_controller.cpp src/robot_client/robo
 target_include_directories(webots_controller PUBLIC
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(webots_controller rclcpp std_msgs rosgraph_msgs Protobuf)
+ament_target_dependencies(webots_controller rclcpp std_msgs rosgraph_msgs cv_bridge image_transport Protobuf OpenCV)
 
 install(TARGETS webots_controller
   EXPORT export_${PROJECT_NAME}

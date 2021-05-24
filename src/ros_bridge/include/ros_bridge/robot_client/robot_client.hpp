@@ -1,6 +1,10 @@
 #include <deque>
 #include <memory>
+
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/text_format.h>
 #include "messages.pb.h"
+#include <opencv2/highgui.hpp>
 
 class RobotClient {
 public:
