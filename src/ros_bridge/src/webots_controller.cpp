@@ -15,13 +15,13 @@ class WebotsController : public rclcpp::Node
 {
   public:
     WebotsController()
-    : Node("webots_controller")
-    {
+    : Node("webots_controller") {
       publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
       clock_publisher_ = this->create_publisher<rosgraph_msgs::msg::Clock>("clock", 10);
       timer_ = this->create_wall_timer(
-      0ms, std::bind(&WebotsController::timer_callback, this));
-      client = new RobotClient(0, 0, 0);
+      8ms, std::bind(&WebotsController::timer_callback, this));
+      client = new RobotClient("127.0.0.1", 10001, 3);
+      client->connectClient();
     }
 
   private:
@@ -34,8 +34,7 @@ class WebotsController : public rclcpp::Node
     RobotClient* client;
 };
 
-int main(int argc, char * argv[])
-{
+int main(int argc, char * argv[]) {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<WebotsController>());
