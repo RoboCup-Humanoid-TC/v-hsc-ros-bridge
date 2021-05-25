@@ -17,6 +17,7 @@
 #include <jsoncpp/json/json.h>
 #include <fstream>
 
+using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 class WebotsController : public rclcpp::Node
@@ -27,6 +28,9 @@ class WebotsController : public rclcpp::Node
       clock_publisher_ = this->create_publisher<rosgraph_msgs::msg::Clock>("clock", 10);
       image_publisher_ = this->create_publisher<sensor_msgs::msg::Image>("image", 10);
       sensor_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("sensor", 10);
+
+      motor_command_subscription_ = this->create_subscription<sensor_msgs::msg::JointState>(
+            "command", 10, std::bind(&WebotsController::command_callback, this, _1));
 
       timer_ = this->create_wall_timer(
       8ms, std::bind(&WebotsController::timer_callback, this));
@@ -67,7 +71,7 @@ class WebotsController : public rclcpp::Node
           SensorMeasurements sensors = client->receive();
           auto clk = rosgraph_msgs::msg::Clock();
           clk.clock = rclcpp::Time(sensors.time());
-          // std::cout<< clk.clock.seconds() << std::endl;
+          // std::cout<< clk.clock.nanosec << std::endl;
           clock_publisher_->publish(clk);
           publishImage(sensors);
           publishSensors(sensors);
@@ -103,10 +107,24 @@ class WebotsController : public rclcpp::Node
       sensor_publisher_->publish(jointmsg);
     }
 
+    void command_callback(const sensor_msgs::msg::JointState::SharedPtr msg) const{
+      
+      ActuatorRequests request;
+      
+      for (unsigned int i = 0; i < msg->name.size(); i++) {
+        MotorPosition *sensor = request.add_motor_positions();
+        sensor->set_name(msg->name[i]);
+        sensor->set_position(msg->position[i]);
+      }
+      client->sendRequest(request);
+      SensorMeasurements sensors = client->receive();
+    }
+
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr clock_publisher_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_publisher_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr sensor_publisher_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr motor_command_subscription_;
     RobotClient* client;
 };
 
