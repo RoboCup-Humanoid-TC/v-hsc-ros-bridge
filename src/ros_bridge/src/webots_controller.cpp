@@ -4,6 +4,7 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
+#include "rclcpp/time.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "rosgraph_msgs/msg/clock.hpp"
 #include "sensor_msgs/msg/image.hpp"
@@ -64,6 +65,10 @@ class WebotsController : public rclcpp::Node
           ActuatorRequests request;
           client->sendRequest(request);
           SensorMeasurements sensors = client->receive();
+          auto clk = rosgraph_msgs::msg::Clock();
+          clk.clock = rclcpp::Time(sensors.time());
+          // std::cout<< clk.clock.seconds() << std::endl;
+          clock_publisher_->publish(clk);
           publishImage(sensors);
           publishSensors(sensors);
         } catch (const std::runtime_error &exc) {
