@@ -2,20 +2,20 @@
 #include <functional>
 #include <memory>
 #include <string>
-
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp/time.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "rosgraph_msgs/msg/clock.hpp"
-#include "sensor_msgs/msg/image.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
-#include "cv_bridge/cv_bridge.h"
-
-#include "ros_bridge/robot_client/robot_client.hpp"
-
 #include <json/value.h>
 #include <jsoncpp/json/json.h>
 #include <fstream>
+
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp/time.hpp>
+#include <std_msgs/msg/string.hpp>
+#include <rosgraph_msgs/msg/clock.hpp>
+#include <sensor_msgs/msg/image.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
+#include <cv_bridge/cv_bridge.h>
+
+#include "ros_bridge/robot_client/robot_client.hpp"
+
 
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -50,8 +50,6 @@ class WebotsController : public rclcpp::Node
 
       // Enable sensors
       for (unsigned int i=0; i < motors_json.size(); i++) {
-        // std::cout<< motors_json[i]["name"].asString() << std::endl;
-        // std::cout<< motors_json[i]["time_step"].asDouble() << std::endl;
         SensorTimeStep *sensor = request.add_sensor_time_steps();
         sensor->set_name(motors_json[i]["name"].asString() + "S");
         sensor->set_timestep(motors_json[i]["time_step"].asDouble());
@@ -71,7 +69,6 @@ class WebotsController : public rclcpp::Node
           SensorMeasurements sensors = client->receive();
           auto clk = rosgraph_msgs::msg::Clock();
           clk.clock = rclcpp::Time(sensors.time());
-          // std::cout<< clk.clock.nanosec << std::endl;
           clock_publisher_->publish(clk);
           publishImage(sensors);
           publishSensors(sensors);
