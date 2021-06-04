@@ -27,7 +27,7 @@ public:
 
     // Parameters
     this->declare_parameter<std::string>("host", "127.0.0.1");
-    this->declare_parameter<int>("port", -1);
+    this->declare_parameter<int>("port", 10001);
 
     // Publishers
     clock_publisher_ = this->create_publisher<rosgraph_msgs::msg::Clock>("clock", 10);
@@ -46,7 +46,7 @@ public:
     // Client construction and connecting
     this->get_parameter("host", host_);
     this->get_parameter("port", port_);
-    client = new RobotClient("127.0.0.1", 10001, 3);
+    client = new RobotClient(host_, port_, 3);
     client->connectClient();
 
     // Enable devices
