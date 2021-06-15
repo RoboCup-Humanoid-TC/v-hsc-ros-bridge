@@ -27,7 +27,6 @@ RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
 
 # source ros package from entrypoint
 RUN sed --in-place --expression \
-      '$isource "$ROS_WS/install/setup.bash"' \
-      /ros_entrypoint.sh
+      '$isource "$ROS_WS/install/setup.bash"'
 
 CMD ["ros2", "run", "ros_bridge", "webots_controller"]
