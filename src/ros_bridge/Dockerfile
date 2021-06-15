@@ -1,10 +1,10 @@
-FROM ros:foxy-ros-base-focal
+FROM osrf/ros:foxy-desktop
 
 WORKDIR /opt/v-hsc-ros-bridge/
 
 # install ros build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      python3-colcon-common-extensions libopencv-dev liblua5.2-dev protobuf-compiler libprotobuf-dev ros-foxy-cv-bridge && \
+      python3-colcon-common-extensions libopencv-dev liblua5.2-dev protobuf-compiler libprotobuf-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # clone ros package repo
