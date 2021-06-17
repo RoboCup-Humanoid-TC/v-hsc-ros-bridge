@@ -1,6 +1,6 @@
 FROM osrf/ros:foxy-desktop
 
-WORKDIR /opt/v-hsc-ros-bridge/
+WORKDIR v-hsc-ros-bridge/
 
 # install ros build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # clone ros package repo
-RUN git -C /opt clone \
+RUN git clone \
       -b main \
       https://github.com/robocup-hl-tc/v-hsc-ros-bridge.git
 
@@ -16,17 +16,20 @@ RUN git -C /opt clone \
 RUN apt-get update && \
     rosdep install -y \
       --from-paths \
-        /opt/v-hsc-ros-bridge/src/ros_bridge && \
+        v-hsc-ros-bridge/src/ros_bridge && \
     rm -rf /var/lib/apt/lists/*
 
 # build ros package source
 RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
-    colcon build \
-      --packages-select \
-        ros_bridge
+    cd v-hsc-ros-bridge/ && \
+    colcon build
 
-# source ros package from entrypoint
-RUN sed --in-place --expression \
-      '$isource "$ROS_WS/install/setup.bash"'
+RUN rosdep fix-permissions
 
-CMD ["ros2", "run", "ros_bridge", "webots_controller"]
+RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
+
+RUN ["chmod", "+x", "v-hsc-ros-bridge/install/setup.bash"]
+
+RUN bash v-hsc-ros-bridge/install/setup.bash
+
+ENTRYPOINT ["bash", "-c", "cd v-hsc-ros-bridge/ && . install/setup.bash && ros2 run ros_bridge webots_controller"]
