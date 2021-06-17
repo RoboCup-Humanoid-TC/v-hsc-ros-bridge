@@ -16,7 +16,7 @@ RUN git -C /opt clone \
 RUN apt-get update && \
     rosdep install -y \
       --from-paths \
-        src/ros_bridge && \
+        /opt/v-hsc-ros-bridge/src/ros_bridge && \
     rm -rf /var/lib/apt/lists/*
 
 # build ros package source
