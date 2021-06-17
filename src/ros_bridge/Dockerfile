@@ -32,4 +32,4 @@ RUN ["chmod", "+x", "v-hsc-ros-bridge/install/setup.bash"]
 
 RUN bash v-hsc-ros-bridge/install/setup.bash
 
-ENTRYPOINT ["bash", "-c", "cd v-hsc-ros-bridge/ && . install/setup.bash && ros2 run ros_bridge webots_controller"]
+ENTRYPOINT ["bash", "-c", "cd v-hsc-ros-bridge/ && . install/setup.bash && ros2 run ros_bridge webots_controller \"$@\"", "--"]
