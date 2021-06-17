@@ -28,7 +28,7 @@ RUN rosdep fix-permissions
 
 RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
 
-RUN ["chmod", "+x", "v-hsc-ros-bridge/install/setup.bash"]
+RUN chmod +x v-hsc-ros-bridge/install/setup.bash
 
 RUN bash v-hsc-ros-bridge/install/setup.bash
 
