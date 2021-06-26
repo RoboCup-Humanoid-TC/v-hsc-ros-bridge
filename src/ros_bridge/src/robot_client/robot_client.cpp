@@ -18,7 +18,7 @@
 
 float RobotClient::history_period = 5;
 int RobotClient::max_answer_size = 1920 * 1080 * 3 + 1000;  // Adding some margin for other data than image
-int RobotClient::max_attempts = 20;
+int RobotClient::max_attempts = 100;
 int RobotClient::wait_time_sec = 1;
 
 static void close_socket(int fd) {

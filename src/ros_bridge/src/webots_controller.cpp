@@ -46,6 +46,14 @@ public:
     // Client construction and connecting
     this->get_parameter("host", host_);
     this->get_parameter("port", port_);
+
+    const char* env_p = std::getenv("ROBOCUP_SIMULATOR_ADDR");
+
+    std::string rsa(env_p);
+    size_t colon_pos = rsa.find(':');
+    host_ = rsa.substr(0, colon_pos);
+    port_ = std::stoi(rsa.substr(colon_pos+1));
+
     client = new RobotClient(host_, port_, 3);
     client->connectClient();
 
