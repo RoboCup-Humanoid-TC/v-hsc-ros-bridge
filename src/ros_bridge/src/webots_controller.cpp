@@ -14,8 +14,10 @@
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <cv_bridge/cv_bridge.h>
+#include <ament_index_cpp/get_package_share_directory.hpp>
 
 #include "ros_bridge/robot_client/robot_client.hpp"
+
 
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -52,7 +54,9 @@ public:
     // Enable devices
     ActuatorRequests request;
     Json::Value devices;
-    std::ifstream json_file("src/ros_bridge/resources/devices.json");
+    std::string package_share_directory = ament_index_cpp::get_package_share_directory("ros_bridge");
+    std::ifstream json_file(package_share_directory + "/resources/devices.json");
+
     json_file >> devices;
 
     // Cameras
