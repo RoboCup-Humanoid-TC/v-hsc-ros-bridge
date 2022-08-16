@@ -42,3 +42,14 @@ Run the node using this command:
 (you can replace host and port with your preferred ones)
 
 Done, now you can access sensor data and publish commands to be performed on the robot.
+
+## Docker image
+
+This repository also includes a Dockefile which can be used to careate a docker image and be able to run it on other machines. To create the image:
+
+1- Install Docker on your machine.
+2- Clone the repository. At the root of the repo, there is the Dockerfile which can be used with this command:
+
+``` docker build . -t <optional tag> ```
+
+After creating the image, you can run it with your preferred srguments.
