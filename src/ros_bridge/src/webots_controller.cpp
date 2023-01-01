@@ -102,7 +102,10 @@ private:
         client->sendRequest(request);
         SensorMeasurements sensors = client->receive();
         auto clk = rosgraph_msgs::msg::Clock();
-        clk.clock = rclcpp::Time(sensors.time());
+        int time = sensors.time();  // Time in ms
+        clk.clock.sec = time / 1000;
+        clk.clock.nanosec = (time % 1000) * 1000000;
+
         clock_publisher_->publish(clk);
         publishImage(sensors);
         publishSensors(sensors);
