@@ -28,6 +28,7 @@ public:
     // Parameters
     this->declare_parameter<std::string>("host", "127.0.0.1");
     this->declare_parameter<int>("port", 10001);
+    this->declare_parameter<const char*>("devices", "src/ros_bridge/resources/devices.json");
 
     // Publishers
     clock_publisher_ = this->create_publisher<rosgraph_msgs::msg::Clock>("clock", 10);
@@ -52,8 +53,14 @@ public:
     // Enable devices
     ActuatorRequests request;
     Json::Value devices;
-    std::ifstream json_file("src/ros_bridge/resources/devices.json");
-    json_file >> devices;
+    std::ifstream json_file(this->get_parameter("devices").as_string());
+
+    // Check if we can open the file
+    if (json_file.is_open()) {
+      json_file >> devices;
+    } else {
+      throw std::runtime_error("Could not open devices.json, check 'devices' parameter!");
+    }
 
     // Cameras
     for (unsigned int i = 0; i < devices["cameras"].size(); i++) {
